@@ -59,11 +59,11 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
 
   # Esperando a tabela atualizar
   wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class='view')]"))
+    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'view')]"))
   )
   # Clicando no botão para abrir o perfil do monitorado
   view_btn = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class='view')]"))
+    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'view')]"))
   )
   view_btn.click()
   
