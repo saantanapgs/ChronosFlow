@@ -54,8 +54,10 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
   monitored_name_reference = wait.until(
       EC.element_to_be_clickable((By.ID, "Pessoa_pessoa_nome"))
   )
+  monitored_name_reference.clear()
   monitored_name_reference.send_keys(cleaned_name)
   monitored_name_reference.send_keys(Keys.ENTER)
+  time.sleep(2)
 
   # Esperando a tabela atualizar
   wait.until(
@@ -83,17 +85,17 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
   time.sleep(2)
 
   # Entrando no iframe
-  wait.until(
-    EC.frame_to_be_available_and_switch_to_it(
-        (By.TAG_NAME, "iframe")
-      )
+  iframes = wait.until(
+    EC.presence_of_all_elements_located((By.TAG_NAME, "iframe"))
   )
+  driver.switch_to.frame(iframes[-1])
 
   # Abrindo select
   categoria = wait.until(
       EC.presence_of_element_located((By.XPATH, "//div[contains(@class,'v-select__selections')]"))
   )
-
+  
+  time.sleep(2)
   driver.execute_script("arguments[0].click();", categoria)
 
   # Selecionando Documentos
