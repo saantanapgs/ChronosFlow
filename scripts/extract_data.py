@@ -30,6 +30,9 @@ def detect_file_type(file_content):
     elif "ALVAR" in file_start:
         return "ALVARA"
     
+    elif re.search(r"DECLARA\s+DE\s+PERDA\s+DO\s+DISPOSITIVO", file_start):
+        return "PERDA_DISPOSITIVO"
+    
     elif (r"CARTEIRA\sDE\sIDENTIDADE", file_start):
         return "RG"
     
@@ -119,6 +122,17 @@ def extract_alvara(file_content):
 
     return "Alvará de Soltura", name, date
 
+def extract_perda_dispositivo(file_content):
+    name_match = re.search(r"EU,[:\-]?\s*([A-Z\s]+)(?:,|$   )", file_content)
+    name = name_match.group(1).strip() if name_match else None
+
+    data_match = re.search(
+        r"(\d{1,2})\s+de\s+([a-zç]+)\s+de\s+(\d{4})", 
+        file_content.lower())
+    date = data_match.group(0) if data_match else None
+
+    return "Perda de dispositivo", name, date
+
 # BOLETIM DE OCORRENCIA
 def extract_bo(file_content):
     months = {
@@ -173,6 +187,9 @@ def extract_data(file_content):
     
     elif doc_type == "ALVARA":
         return extract_alvara(file_content)
+    
+    elif doc_type == "PERDA_DISPOSITIVO":
+        return extract_perda_dispositivo(file_content)
     
     elif doc_type == "BO":
         return extract_bo(file_content)
