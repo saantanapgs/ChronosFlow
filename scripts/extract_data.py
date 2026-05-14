@@ -14,6 +14,9 @@ def detect_file_type(file_content):
 
     if re.search(r"BOLETIM\s+DE\s+OCORR", file_start):
         return "BO"
+
+    elif re.search(r"DECLARA\s+DE\s+PERDA\s+DO\s+DISPOSITIVO", file_start):
+        return "PERDA_DISPOSITIVO"
     
     elif "SUBSTITUI" in file_start:
         return "TERMO_SUBSTITUICAO"
@@ -29,10 +32,7 @@ def detect_file_type(file_content):
     
     elif "ALVAR" in file_start:
         return "ALVARA"
-    
-    elif re.search(r"DECLARA\s+DE\s+PERDA\s+DO\s+DISPOSITIVO", file_start):
-        return "PERDA_DISPOSITIVO"
-    
+
     elif (r"CARTEIRA\sDE\sIDENTIDADE", file_start):
         return "RG"
     
