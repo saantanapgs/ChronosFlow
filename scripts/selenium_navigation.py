@@ -54,11 +54,9 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
   monitored_name_reference = wait.until(
       EC.element_to_be_clickable((By.ID, "Pessoa_pessoa_nome"))
   )
-  monitored_name_reference.clear()
   monitored_name_reference.send_keys(cleaned_name)
   monitored_name_reference.send_keys(Keys.ENTER)
   time.sleep(2)
-  monitored_name_reference.clear()
   
 
   # Esperando a tabela atualizar

@@ -15,7 +15,7 @@ def detect_file_type(file_content):
     if re.search(r"BOLETIM\s+DE\s+OCORR", file_start):
         return "BO"
 
-    elif re.search(r"DECLARA\s+DE\s+PERDA\s+DO\s+DISPOSITIVO", file_start):
+    elif re.search(r"PERDA\s+DO\s+DISPOSITIVO", file_start):
         return "PERDA_DISPOSITIVO"
     
     elif "SUBSTITUI" in file_start:
@@ -123,7 +123,11 @@ def extract_alvara(file_content):
     return "Alvará de Soltura", name, date
 
 def extract_perda_dispositivo(file_content):
-    name_match = re.search(r"EU,[:\-]?\s*([A-Z\s]+)(?:,|$   )", file_content)
+    months = {
+        "janeiro": "01", "fevereiro": "02", "marco": "03", "abril": "04", "maio": "05","junho": "06",
+        "julho": "07", "agosto": "08", "setembro": "09", "outubro": "10","novembro": "11", "dezembro": "12"
+    }
+    name_match = re.search(r"EU[,\-]?\s*([A-Z\s]+)(?:,|$   )", file_content)
     name = name_match.group(1).strip() if name_match else None
 
     data_match = re.search(
@@ -131,7 +135,14 @@ def extract_perda_dispositivo(file_content):
         file_content.lower())
     date = data_match.group(0) if data_match else None
 
-    return "Perda de dispositivo", name, date
+    if data_match:
+        day, written_month, year = data_match.groups()
+        month = months.get(written_month, "00")
+        date = f"{day.zfill(2)}.{month}.{year}"
+    else:
+        date = "."
+
+    return "Declaração de perda de dispositivo", name, date
 
 # BOLETIM DE OCORRENCIA
 def extract_bo(file_content):
