@@ -53,9 +53,9 @@ for files in os.listdir(directory):
 
         cleaned_text = clean_text(full_text)
 
-        print("==================================")
-        print(full_text)
-        print("==================================")
+        #print("==================================")
+        #print(full_text)
+        #print("==================================")
 
         file_type, name, date = extract_data(cleaned_text)
 
