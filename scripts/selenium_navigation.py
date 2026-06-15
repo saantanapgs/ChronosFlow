@@ -94,29 +94,63 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
     time.sleep(3)
 
     # Aguarda aparecer algum botão View
-    wait.until(
-        EC.presence_of_element_located(
-            (By.XPATH, "//a[contains(@class,'view')]")
-        )
-    )
+    time.sleep(3)
 
-    # Pega todos os botões View encontrados
-    views = driver.find_elements(
+    linhas = driver.find_elements(
         By.XPATH,
-        "//a[contains(@class,'view')]"
+        "//table//tr"
     )
 
-    print(f"Views encontradas: {len(views)}")
+    monitorado_encontrado = False
 
-    if len(views) == 0:
-        print(f"Nenhum resultado encontrado para {cleaned_name}")
+    for linha in linhas:
+        try:
+            texto_linha = linha.text.upper()
+
+            if cleaned_name.upper() in texto_linha:
+
+                print("\nMonitorado localizado:")
+                print(texto_linha)
+
+                confirmacao = input(
+                    "\nConfirmar upload para este monitorado? (S/N): "
+                )
+
+                if confirmacao.upper() != "S":
+                    print("Upload cancelado pelo operador.")
+
+                    driver.get(
+                        "https://se.synergye.com.br/index.php?r=pessoa"
+                    )
+
+                    return
+
+                view_btn = linha.find_element(
+                    By.XPATH,
+                    ".//a[contains(@class,'view')]"
+                )
+
+                driver.execute_script(
+                    "arguments[0].click();",
+                    view_btn
+                )
+
+                monitorado_encontrado = True
+                break
+
+        except:
+            pass
+
+    if not monitorado_encontrado:
+        print(
+            f"\nERRO: {cleaned_name} não foi encontrado na tabela."
+        )
+
+        driver.get(
+            "https://se.synergye.com.br/index.php?r=pessoa"
+        )
+
         return
-
-    # Clica na primeira View retornada pela pesquisa
-    driver.execute_script(
-        "arguments[0].click();",
-        views[0]
-    )
 
     # Aba Arquivos
     files_btn = wait.until(

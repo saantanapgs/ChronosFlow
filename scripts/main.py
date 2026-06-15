@@ -25,6 +25,9 @@ def match_name(name, folder):
 
 #directory = r"C:\Users\Cemep.sejuc\Downloads\CEMEP-main\Scan"
 directory = r"C:\Users\Cemep.sejuc\Documents\Cemep automatization\Scan_TESTE"
+manual_dir = r"C:\Users\Cemep.sejuc\Documents\Cemep automatization\MANUAL"
+
+os.makedirs(manual_dir, exist_ok=True)
 
 # Redirecionando para o site 'Synergye Chronos SE'
 driver, wait = chronos_login()
@@ -91,7 +94,35 @@ for files in os.listdir(directory):
         print(f"Renomeado para: {final_name}")
 
         if not name:
-            print("Arquivo sem nome identificado, pulando movimentação.")
+            destino_manual = os.path.join(
+                manual_dir,
+                os.path.basename(final_path)
+            )
+
+            contador = 1
+
+            while os.path.exists(destino_manual):
+
+                nome_base, ext = os.path.splitext(
+                    os.path.basename(final_path)
+                )
+
+                destino_manual = os.path.join(
+                    manual_dir,
+                    f"{nome_base}_{contador}{ext}"
+                )
+
+                contador += 1
+
+            shutil.move(
+                final_path,
+                destino_manual
+            )
+
+            print(
+                f"Arquivo movido para análise manual: {destino_manual}"
+            )
+
             continue
 
         cleaned_name = re.sub(r'[\\/*?:"<>|]', "", name)
@@ -128,7 +159,22 @@ for files in os.listdir(directory):
             print(f"Movido para: {destination_path}")
 
             # Função pra pesquisar o monitorado no chronos
-            searching_monitored(driver, wait, cleaned_name, final_name, destination_path)
-            
+            try:
+                searching_monitored(
+                    driver,
+                    wait,
+                    cleaned_name,
+                    final_name,
+                    destination_path
+                )
+
+            except Exception as e:
+                print(f"\nErro ao enviar para o Chronos: {e}")
+
+                driver.get(
+                    "https://se.synergye.com.br/index.php?r=pessoa"
+                )
+
+                continue
         else:
             print(f"Pasta do monitorado(a): {cleaned_name} não encontrada.")
