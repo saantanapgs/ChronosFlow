@@ -84,11 +84,46 @@ def extract_termo(file_content):
 
 # REGISTRO GERAL
 def extract_rg(file_content):
-    name_match = re.search(r"NOME[:\-]?\s*([A-Z\s]+)", file_content)
-    name = name_match.group(1).strip() if name_match else None
-    
-    return "RG", name, "."
+    # Normaliza quebras de linha
+    text = file_content.upper()
 
+    # Procura o texto logo abaixo de NOME/NAME
+    name_match = re.search(
+        r"NOME\s*/?\s*NAME\s*\n+([A-ZÀ-Ú\s]+)",
+        text,
+        re.MULTILINE
+    )
+
+    if not name_match:
+        # Fallback para casos em que o OCR remove a quebra de linha
+        name_match = re.search(
+            r"NOME\s*/?\s*NAME\s*([A-ZÀ-Ú\s]{5,})",
+            text
+        )
+
+    name = None
+
+    if name_match:
+        name = " ".join(name_match.group(1).split())
+
+        # Remove linhas que claramente não são nomes
+        palavras_invalidas = [
+            "FILIACAO",
+            "FILIATION",
+            "NATURALIDADE",
+            "NASCIMENTO",
+            "SEXO",
+            "CPF",
+            "RG",
+            "DOC",
+            "VALIDADE"
+        ]
+
+        for palavra in palavras_invalidas:
+            if palavra in name:
+                name = name.split(palavra)[0].strip()
+
+    return "RG", name, "."
 
 # CARTEIRA NACIONAL DE HABILITACAO
 def extract_cnh(file_content):
