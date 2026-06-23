@@ -14,7 +14,7 @@ import pytesseract
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-# REQUISITO 8 — Sistema de Logs
+# Sistema de Logs
 
 def setup_logging() -> logging.Logger:
     logs_dir = os.path.join(os.path.dirname(__file__), "..", "logs")
