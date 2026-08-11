@@ -1,0 +1,95 @@
+[23/06/2026 16:43:24] INFO — Sistema iniciado
+[23/06/2026 16:45:20] INFO — Sistema iniciado
+[23/06/2026 16:45:34] INFO — Modo SCANTESTE
+[23/06/2026 16:45:34] INFO — Arquivo: SCAN1.pdf
+[23/06/2026 16:45:38] INFO — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\Dean Gabriel Gomes Santos 29.07.2025
+[23/06/2026 16:45:38] INFO — Arquivo movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\Dean Gabriel Gomes Santos 29.07.2025\TERMO DE SUBSTITUIÇÃO - DEAN GABRIEL GOMES SANTOS - 27.04.2026.pdf
+[23/06/2026 16:45:38] INFO — Envio para Chronos: TERMO DE SUBSTITUIÇÃO - DEAN GABRIEL GOMES SANTOS - 27.04.2026.pdf
+[23/06/2026 16:45:38] INFO — Chronos — tentativa 1/3: TERMO DE SUBSTITUIÇÃO - DEAN GABRIEL GOMES SANTOS - 27.04.2026.pdf
+[23/06/2026 16:45:58] INFO — Chronos — sucesso: TERMO DE SUBSTITUIÇÃO - DEAN GABRIEL GOMES SANTOS - 27.04.2026.pdf
+[23/06/2026 16:45:58] INFO — Processamento concluído: SCAN1.pdf
+[23/06/2026 16:45:58] INFO — Arquivo: SCAN2.pdf
+[23/06/2026 16:46:02] INFO — Movido para MANUAL: C:\Program Files\automatization_scan_project\MANUAL\SCAN2 (1).pdf
+[23/06/2026 16:46:13] INFO — Sistema iniciado
+[23/06/2026 16:46:58] INFO — Modo MANUAL
+[23/06/2026 16:46:58] INFO — MANUAL: 3 arquivo(s) na fila.
+[23/06/2026 16:46:58] INFO — Arquivo: Alvará de Soltura - Abelardo Simao dos Santos Melo.pdf
+[23/06/2026 16:46:58] INFO — Nome extraído: ABELARDO SIMAO DOS SANTOS MELO
+[23/06/2026 16:46:58] ERROR — Erro: Pasta do monitorado 'ABELARDO SIMAO DOS SANTOS MELO' não encontrada no BD.
+[23/06/2026 16:47:00] INFO — Arquivo: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:47:00] INFO — Nome extraído: DEAN GABRIEL GOMES SANTOS
+[23/06/2026 16:47:00] INFO — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\Dean Gabriel Gomes Santos 29.07.2025
+[23/06/2026 16:47:00] INFO — Arquivo movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\Dean Gabriel Gomes Santos 29.07.2025\Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:47:00] INFO — Envio para Chronos: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:47:00] INFO — Chronos — tentativa 1/3: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:47:24] INFO — Chronos — sucesso: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:47:24] INFO — Processamento concluído: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:47:24] INFO — Arquivo: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:47:24] INFO — Nome extraído: ABELARDO SIMAO DOS SANTOS NETO
+[23/06/2026 16:47:24] INFO — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026
+[23/06/2026 16:47:24] INFO — Arquivo movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026\Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:47:24] INFO — Envio para Chronos: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:47:24] INFO — Chronos — tentativa 1/3: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:47:31] INFO — Chronos — sucesso: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:47:31] INFO — Processamento concluído: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:34] INFO — Sistema iniciado
+[23/06/2026 16:50:42] INFO — Modo MANUAL
+[23/06/2026 16:50:42] INFO — MANUAL: 2 arquivo(s) na fila.
+[23/06/2026 16:50:42] INFO — Arquivo: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:42] INFO — Nome extraído: ABELARDO SIMAO DOS SANTOS NETO
+[23/06/2026 16:50:42] INFO — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026
+[23/06/2026 16:50:42] INFO — Arquivo movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026\Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:42] INFO — Envio para Chronos: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:42] INFO — Chronos — tentativa 1/3: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:50] INFO — Chronos — sucesso: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:50] INFO — Processamento concluído: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:50] INFO — Arquivo: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:50] INFO — Nome extraído: ABELARDO SIMAO DOS SANTOS NETO
+[23/06/2026 16:50:50] INFO — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026
+[23/06/2026 16:50:50] INFO — Arquivo movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026\Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:50] INFO — Envio para Chronos: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:50] INFO — Chronos — tentativa 1/3: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:57] INFO — Chronos — sucesso: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:50:57] INFO — Processamento concluído: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:57:25] INFO    — Sistema iniciado
+[23/06/2026 16:57:35] INFO    — Modo SCAN iniciado
+[23/06/2026 16:57:35] INFO    — Arquivo: scan1.pdf
+[23/06/2026 16:57:37] INFO    — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\Dean Gabriel Gomes Santos 29.07.2025
+[23/06/2026 16:57:37] INFO    — Arquivo movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\Dean Gabriel Gomes Santos 29.07.2025\TERMO DE SUBSTITUIÇÃO - DEAN GABRIEL GOMES SANTOS - 27.04.2026.pdf
+[23/06/2026 16:57:37] INFO    — Enviando para Chronos: TERMO DE SUBSTITUIÇÃO - DEAN GABRIEL GOMES SANTOS - 27.04.2026.pdf
+[23/06/2026 16:57:37] DEBUG   — Chronos tentativa 1/3: TERMO DE SUBSTITUIÇÃO - DEAN GABRIEL GOMES SANTOS - 27.04.2026.pdf
+[23/06/2026 16:58:02] INFO    — Chronos OK: TERMO DE SUBSTITUIÇÃO - DEAN GABRIEL GOMES SANTOS - 27.04.2026.pdf
+[23/06/2026 16:58:02] INFO    — Concluído: scan1.pdf
+[23/06/2026 16:58:02] INFO    — Sistema encerrado
+[23/06/2026 16:58:11] INFO    — Sistema iniciado
+[23/06/2026 16:58:20] INFO    — Modo MANUAL iniciado
+[23/06/2026 16:58:20] INFO    — MANUAL: 3 arquivo(s) na fila.
+[23/06/2026 16:58:20] INFO    — Arquivo: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf | Nome: ABELARDO SIMAO DOS SANTOS NETO
+[23/06/2026 16:58:20] INFO    — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026
+[23/06/2026 16:58:20] INFO    — Movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026\Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:58:20] INFO    — Enviando para Chronos: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:58:20] DEBUG   — Chronos tentativa 1/3: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:58:28] INFO    — Chronos OK: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:58:28] INFO    — Concluído: Alvará de Soltura - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:58:28] INFO    — Arquivo: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf | Nome: DEAN GABRIEL GOMES SANTOS
+[23/06/2026 16:58:28] INFO    — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\Dean Gabriel Gomes Santos 29.07.2025
+[23/06/2026 16:58:28] INFO    — Movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\Dean Gabriel Gomes Santos 29.07.2025\Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:58:28] INFO    — Enviando para Chronos: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:58:28] DEBUG   — Chronos tentativa 1/3: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:58:47] INFO    — Chronos OK: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:58:47] INFO    — Concluído: Termo de declaraçao - Dean Gabriel Gomes Santos - 29.07.2025.pdf
+[23/06/2026 16:58:47] INFO    — Arquivo: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf | Nome: ABELARDO SIMAO DOS SANTOS NETO
+[23/06/2026 16:58:47] INFO    — Pasta encontrada: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026
+[23/06/2026 16:58:47] INFO    — Movido: C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS\ABELARDO SIMAO DOS SANTOS NETO 21.01.2026\Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:58:47] INFO    — Enviando para Chronos: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 16:58:47] DEBUG   — Chronos tentativa 1/3: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 17:02:32] INFO    — Sistema iniciado
+[23/06/2026 17:02:43] INFO    — Modo SCAN iniciado
+[23/06/2026 17:02:43] INFO    — Arquivo: 1.pdf
+[23/06/2026 17:02:47] INFO    — Movido para MANUAL: C:\Program Files\automatization_scan_project\MANUAL\1 (1).pdf
+[23/06/2026 17:02:47] INFO    — Sistema encerrado
+[23/06/2026 17:03:16] INFO    — Sistema iniciado
+[23/06/2026 17:03:29] INFO    — Modo SCAN iniciado
+[23/06/2026 17:03:29] INFO    — Arquivo: Termo de substituiçao - Abelardo Simao dos Santos Neto.pdf
+[23/06/2026 17:03:31] INFO    — Movido para MANUAL: C:\Program Files\automatization_scan_project\MANUAL\Termo de substituiçao - Abelardo Simao dos Santos Neto (1).pdf
+[23/06/2026 17:03:31] INFO    — Sistema encerrado

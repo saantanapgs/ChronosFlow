@@ -1,4 +1,4 @@
-# 📄 Projeto CEMEP
+# 📄 ChronosFlow
 
 Projeto em Python para processamento de dados e extração de informações de arquivos (ex: PDFs/imagens).
 
