@@ -13,18 +13,11 @@ def chronos_login():
     # Definindo o navegador
     options = Options()
     options.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
-
-    service = Service(
-        r"C:\Users\Cemep.sejuc\.cache\selenium\chromedriver\win64\149.0.7827.55\chromedriver.exe"
-    )
-
     #print("Iniciando o navegador")
 
     driver = webdriver.Chrome(
-        service=service,
         options=options
     )
-
     #print("Navegador criado")
 
     # Adicionando um delay para realizar cada passo da automação
