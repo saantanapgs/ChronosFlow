@@ -102,9 +102,9 @@ def match_name(name, folder):
 
 # Caminhos
 
-directory  = r"C:\Program Files\automatization_scan_project\Scan_TESTE"
-manual_dir = r"C:\Program Files\automatization_scan_project\MANUAL"
-base_dir   = r"C:\Program Files\automatization_scan_project\MONITORAMENTO\MONITORADOS\ATIVOS"
+directory  = r"C:\Users\Cemep.sejuc\Documents\Cemep automatization\Scan_TESTE"
+manual_dir = r"C:\Users\Cemep.sejuc\Documents\Cemep automatization\MANUAL"
+base_dir   = r"\\Servidor1\d\MONITORAMENTO\MONITORADOS - BD\ATIVOS"
 
 os.makedirs(manual_dir, exist_ok=True)
 
