@@ -45,143 +45,6 @@ def setup_logging() -> logging.Logger:
 
     return logger
 
-#  EXECUTAR MANUAL
-def execute_manual_mode():
-    logger.info("Modo MANUAL iniciado")
-
-    fila = run_manual_mode(
-        driver=driver,
-        wait=wait,
-        manual_dir=manual_dir,
-        base_bd_dir=base_dir,
-        normalize_fn=normalize,
-        match_name_fn=match_name,
-        logger=logger,
-    )
-
-# EXECUTAR SCAN
-def execute_scan_mode():
-    logger.info("Modo SCAN iniciado")
-
-    pdf_files = [f for f in os.listdir(directory) if f.lower().endswith(".pdf")]
-    fila = build_queue(pdf_files)
-
-    for files in pdf_files:
-        pdf_path = os.path.join(directory, files)
-        logger.info(f"Arquivo: {files}")
-
-        sep = "─" * 44
-        print(f"\n{sep}")
-        print(f"  Arquivo : {files}")
-
-        fila["pendentes"].remove(files)
-        fila["processando"].append(files)
-
-        try:
-            images = convert_from_path(pdf_path)
-        except Exception as e:
-            logger.error(f"Erro ao abrir PDF: {files} | {e}")
-            print(f"  ERRO ao abrir o arquivo.")
-            fila["processando"].remove(files)
-            fila["erros"].append(files)
-            continue
-
-        full_text = ""
-        for img in images:
-            try:
-                img = img.convert("RGB")
-                full_text += pytesseract.image_to_string(img, lang="por") + "\n"
-            except Exception as e:
-                logger.warning(f"Erro no OCR: {files} | {e}")
-
-                cleaned_text = clean_text(full_text)
-                file_type, name, date = extract_data(cleaned_text)
-
-                print(f"  Tipo    : {file_type}")
-
-                original_name = os.path.basename(pdf_path)
-
-                if name:
-                    new_file_name = f"{file_type.upper()} - {name}"
-                    if date and date != ".":
-                        new_file_name += f" - {date}"
-                    new_file_name = re.sub(r'[\\/*?:"<>|]', "", new_file_name)
-                    final_name = f"{new_file_name}.pdf"
-                else:
-                    print(f"  Nome não identificado — mantendo nome original.")
-                    final_name = original_name
-
-                final_path = os.path.join(directory, final_name)
-                counter = 1
-                base_sem_ext, ext = os.path.splitext(final_name)
-                while os.path.exists(final_path):
-                    final_name = f"{base_sem_ext} ({counter}){ext}"
-                    final_path = os.path.join(directory, final_name)
-                    counter += 1
-
-                os.rename(pdf_path, final_path)
-                print(f"  Renome  : {final_name}")
-
-                if not name:
-                    destino = os.path.join(manual_dir, os.path.basename(final_path))
-                    c = 1
-                    while os.path.exists(destino):
-                        b, e = os.path.splitext(os.path.basename(final_path))
-                        destino = os.path.join(manual_dir, f"{b}_{c}{e}")
-                        c += 1
-                    shutil.move(final_path, destino)
-                    logger.info(f"Movido para MANUAL: {destino}")
-                    print(f"  → MANUAL: {destino}")
-                    fila["processando"].remove(files)
-                    fila["erros"].append(files)
-                    continue
-
-                cleaned_name = re.sub(r'[\\/*?:"<>|]', "", name)
-
-                folder_found = None
-                for root, dirs, _ in os.walk(base_dir):
-                    for folder in dirs:
-                        if match_name(cleaned_name, folder):
-                            folder_found = os.path.join(root, folder)
-                            break
-                    if folder_found:
-                        break
-
-                if not folder_found:
-                    logger.warning(f"Pasta não encontrada: {cleaned_name}")
-                    print(f"  AVISO: pasta de '{cleaned_name}' não encontrada no BD.")
-                    fila["processando"].remove(files)
-                    fila["erros"].append(files)
-                    continue
-
-                logger.info(f"Pasta encontrada: {folder_found}")
-                print(f"  Pasta   : {folder_found}")
-
-                dest_path = os.path.join(folder_found, os.path.basename(final_path))
-                c2 = 1
-                b2, e2 = os.path.splitext(os.path.basename(final_path))
-                while os.path.exists(dest_path):
-                    dest_path = os.path.join(folder_found, f"{b2} {c2}{e2}")
-                    c2 += 1
-
-                shutil.move(final_path, dest_path)
-                logger.info(f"Arquivo movido: {dest_path}")
-                print(f"  Movido  : {dest_path}")
-
-                logger.info(f"Enviando para Chronos: {final_name}")
-                sucesso = chronos_with_retry(
-                    driver, wait, cleaned_name, final_name, dest_path, logger
-                )
-
-                if sucesso:
-                    logger.info(f"Concluído: {files}")
-                    fila["processando"].remove(files)
-                    fila["concluidos"].append(files)
-                else:
-                    logger.error(f"Falha no Chronos: {files}")
-                    fila["processando"].remove(files)
-                    fila["erros"].append(files)
-                    driver.get("https://se.synergye.com.br/index.php?r=pessoa")
 
 #  Menu de execução
 
@@ -257,11 +120,293 @@ if __name__ == "__main__":
 
     # MODO MANUAL 
     if escolha == "2":
-        execute_manual_mode()
+        logger.info("Modo MANUAL iniciado")
+
+        fila = run_manual_mode(
+            driver=driver,
+            wait=wait,
+            manual_dir=manual_dir,
+            base_bd_dir=base_dir,
+            normalize_fn=normalize,
+            match_name_fn=match_name,
+            logger=logger,
+        )
+
     # MODO SCAN  
     else:
-        execute_scan_mode()
+        logger.info("Modo SCAN iniciado")
+
+        pdf_files = [f for f in os.listdir(directory) if f.lower().endswith(".pdf")]
+        fila = build_queue(pdf_files)
+
+        for files in pdf_files:
+            pdf_path = os.path.join(directory, files)
+            logger.info(f"Arquivo: {files}")
+
+            sep = "─" * 44
+            print(f"\n{sep}")
+            print(f"  Arquivo : {files}")
+
+            fila["pendentes"].remove(files)
+            fila["processando"].append(files)
+
+            try:
+                images = convert_from_path(pdf_path)
+            except Exception as e:
+                logger.error(f"Erro ao abrir PDF: {files} | {e}")
+                print(f"  ERRO ao abrir o arquivo.")
+                fila["processando"].remove(files)
+                fila["erros"].append(files)
+                continue
+
+            full_text = ""
+            for img in images:
+                try:
+                    img = img.convert("RGB")
+                    full_text += pytesseract.image_to_string(img, lang="por") + "\n"
+                except Exception as e:
+                    logger.warning(f"Erro no OCR: {files} | {e}")
+
+            cleaned_text = clean_text(full_text)
+            file_type, name, date = extract_data(cleaned_text)
+
+            print(f"  Tipo    : {file_type}")
+
+            original_name = os.path.basename(pdf_path)
+
+            if name:
+                new_file_name = f"{file_type.upper()} - {name}"
+                if date and date != ".":
+                    new_file_name += f" - {date}"
+                new_file_name = re.sub(r'[\\/*?:"<>|]', "", new_file_name)
+                final_name = f"{new_file_name}.pdf"
+            else:
+                print(f"  Nome não identificado — mantendo nome original.")
+                final_name = original_name
+
+            final_path = os.path.join(directory, final_name)
+            counter = 1
+            base_sem_ext, ext = os.path.splitext(final_name)
+            while os.path.exists(final_path):
+                final_name = f"{base_sem_ext} ({counter}){ext}"
+                final_path = os.path.join(directory, final_name)
+                counter += 1
+
+            os.rename(pdf_path, final_path)
+            print(f"  Renome  : {final_name}")
+
+            if not name:
+                destino = os.path.join(manual_dir, os.path.basename(final_path))
+                c = 1
+                while os.path.exists(destino):
+                    b, e = os.path.splitext(os.path.basename(final_path))
+                    destino = os.path.join(manual_dir, f"{b}_{c}{e}")
+                    c += 1
+                shutil.move(final_path, destino)
+                logger.info(f"Movido para MANUAL: {destino}")
+                print(f"  → MANUAL: {destino}")
+                fila["processando"].remove(files)
+                fila["erros"].append(files)
+                continue
+
+            cleaned_name = re.sub(r'[\\/*?:"<>|]', "", name)
+
+            folder_found = None
+            for root, dirs, _ in os.walk(base_dir):
+                for folder in dirs:
+                    if match_name(cleaned_name, folder):
+                        folder_found = os.path.join(root, folder)
+                        break
+                if folder_found:
+                    break
+
+            if not folder_found:
+                logger.warning(f"Pasta não encontrada: {cleaned_name}")
+                print(f"  AVISO: pasta de '{cleaned_name}' não encontrada no BD.")
+                fila["processando"].remove(files)
+                fila["erros"].append(files)
+                continue
+
+            logger.info(f"Pasta encontrada: {folder_found}")
+            print(f"  Pasta   : {folder_found}")
+
+            dest_path = os.path.join(folder_found, os.path.basename(final_path))
+            c2 = 1
+            b2, e2 = os.path.splitext(os.path.basename(final_path))
+            while os.path.exists(dest_path):
+                dest_path = os.path.join(folder_found, f"{b2} {c2}{e2}")
+                c2 += 1
+
+            shutil.move(final_path, dest_path)
+            logger.info(f"Arquivo movido: {dest_path}")
+            print(f"  Movido  : {dest_path}")
+
+            logger.info(f"Enviando para Chronos: {final_name}")
+            sucesso = chronos_with_retry(
+                driver, wait, cleaned_name, final_name, dest_path, logger
+            )
+
+            if sucesso:
+                logger.info(f"Concluído: {files}")
+                fila["processando"].remove(files)
+                fila["concluidos"].append(files)
+            else:
+                logger.error(f"Falha no Chronos: {files}")
+                fila["processando"].remove(files)
+                fila["erros"].append(files)
+                driver.get("https://se.synergye.com.br/index.php?r=pessoa")
 
     print_summary(fila)
     logger.info("Sistema encerrado")
     driver.quit()
+
+# ─────────────────────────────────────────────────────────────
+# Funções chamadas pela GUI (não alteram a lógica interna)
+# ─────────────────────────────────────────────────────────────
+
+def _log_gui(msg_queue, text):
+    """Envia mensagem para a área de log da GUI (se disponível)."""
+    if msg_queue is not None:
+        msg_queue.put(("log", text))
+
+def chronos_login():
+    from selenium_navigation import chronos_login as _login
+    return _login()
+
+def processar_scan(driver, wait, logger, msg_queue=None):
+    from selenium_navigation import searching_monitored
+    from manual_mode import chronos_with_retry
+
+    pdf_files = [f for f in os.listdir(directory) if f.lower().endswith(".pdf")]
+    fila = build_queue(pdf_files)
+
+    for files in pdf_files:
+        pdf_path = os.path.join(directory, files)
+        logger.info(f"Arquivo: {files}")
+        _log_gui(msg_queue, f"  Arquivo : {files}")
+
+        fila["pendentes"].remove(files)
+        fila["processando"].append(files)
+
+        try:
+            images = convert_from_path(pdf_path)
+        except Exception as e:
+            logger.error(f"Erro ao abrir PDF: {files} | {e}")
+            _log_gui(msg_queue, f"  ERRO ao abrir o arquivo: {e}")
+            fila["processando"].remove(files)
+            fila["erros"].append(files)
+            continue
+
+        full_text = ""
+        for img in images:
+            try:
+                img = img.convert("RGB")
+                full_text += pytesseract.image_to_string(img, lang="por") + "\n"
+            except Exception as e:
+                logger.warning(f"Erro no OCR: {files} | {e}")
+
+        cleaned_text = clean_text(full_text)
+        file_type, name, date = extract_data(cleaned_text)
+
+        _log_gui(msg_queue, f"  Tipo    : {file_type}")
+
+        original_name = os.path.basename(pdf_path)
+
+        if name:
+            new_file_name = f"{file_type.upper()} - {name}"
+            if date and date != ".":
+                new_file_name += f" - {date}"
+            new_file_name = re.sub(r'[\\/*?:"<>|]', "", new_file_name)
+            final_name = f"{new_file_name}.pdf"
+        else:
+            _log_gui(msg_queue, "  Nome não identificado — mantendo nome original.")
+            final_name = original_name
+
+        final_path = os.path.join(directory, final_name)
+        counter = 1
+        base_sem_ext, ext = os.path.splitext(final_name)
+        while os.path.exists(final_path):
+            final_name = f"{base_sem_ext} ({counter}){ext}"
+            final_path = os.path.join(directory, final_name)
+            counter += 1
+
+        os.rename(pdf_path, final_path)
+        _log_gui(msg_queue, f"  Renome  : {final_name}")
+
+        if not name:
+            destino = os.path.join(manual_dir, os.path.basename(final_path))
+            c = 1
+            while os.path.exists(destino):
+                b, e = os.path.splitext(os.path.basename(final_path))
+                destino = os.path.join(manual_dir, f"{b}_{c}{e}")
+                c += 1
+            shutil.move(final_path, destino)
+            logger.info(f"Movido para MANUAL: {destino}")
+            _log_gui(msg_queue, f"  → MANUAL: {destino}")
+            fila["processando"].remove(files)
+            fila["erros"].append(files)
+            continue
+
+        cleaned_name = re.sub(r'[\\/*?:"<>|]', "", name)
+
+        folder_found = None
+        for root, dirs, _ in os.walk(base_dir):
+            for folder in dirs:
+                if match_name(cleaned_name, folder):
+                    folder_found = os.path.join(root, folder)
+                    break
+            if folder_found:
+                break
+
+        if not folder_found:
+            logger.warning(f"Pasta não encontrada: {cleaned_name}")
+            _log_gui(msg_queue, f"  AVISO: pasta de '{cleaned_name}' não encontrada no BD.")
+            fila["processando"].remove(files)
+            fila["erros"].append(files)
+            continue
+
+        logger.info(f"Pasta encontrada: {folder_found}")
+        _log_gui(msg_queue, f"  Pasta   : {folder_found}")
+
+        dest_path = os.path.join(folder_found, os.path.basename(final_path))
+        c2 = 1
+        b2, e2 = os.path.splitext(os.path.basename(final_path))
+        while os.path.exists(dest_path):
+            dest_path = os.path.join(folder_found, f"{b2} {c2}{e2}")
+            c2 += 1
+
+        shutil.move(final_path, dest_path)
+        logger.info(f"Arquivo movido: {dest_path}")
+        _log_gui(msg_queue, f"  Movido  : {dest_path}")
+
+        logger.info(f"Enviando para Chronos: {final_name}")
+        sucesso = chronos_with_retry(
+            driver, wait, cleaned_name, final_name, dest_path, logger,
+            msg_queue=msg_queue,
+        )
+
+        if sucesso:
+            logger.info(f"Concluído: {files}")
+            fila["processando"].remove(files)
+            fila["concluidos"].append(files)
+        else:
+            logger.error(f"Falha no Chronos: {files}")
+            fila["processando"].remove(files)
+            fila["erros"].append(files)
+            driver.get("https://se.synergye.com.br/index.php?r=pessoa")
+
+    return fila
+
+
+def processar_manual(driver, wait, logger, msg_queue=None):
+    from manual_mode import run_manual_mode
+    return run_manual_mode(
+        driver=driver,
+        wait=wait,
+        manual_dir=manual_dir,
+        base_bd_dir=base_dir,
+        normalize_fn=normalize,
+        match_name_fn=match_name,
+        logger=logger,
+        msg_queue=msg_queue,
+    )

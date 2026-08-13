@@ -216,3 +216,142 @@ def run_manual_mode(driver, wait, manual_dir, base_bd_dir,
         )
 
     return fila
+
+# ── Versões com suporte a msg_queue (GUI) ────────────────────────────────────
+# Sobrescreve run_manual_mode e chronos_with_retry com assinaturas estendidas.
+
+def run_manual_mode(driver, wait, manual_dir, base_bd_dir,
+                    normalize_fn, match_name_fn, logger, msg_queue=None):
+    pdf_files = [f for f in os.listdir(manual_dir) if f.lower().endswith(".pdf")]
+
+    def _log(text):
+        print(text)
+        if msg_queue:
+            msg_queue.put(("log", text))
+
+    if not pdf_files:
+        _log("  Nenhum arquivo PDF encontrado na pasta MANUAL.")
+        logger.info("MANUAL: pasta vazia.")
+        return {"pendentes": [], "processando": [], "concluidos": [], "erros": []}
+
+    fila = {"pendentes": list(pdf_files), "processando": [], "concluidos": [], "erros": []}
+    _log(f"  {len(pdf_files)} arquivo(s) na fila.")
+    logger.info(f"MANUAL: {len(pdf_files)} arquivo(s) na fila.")
+
+    for filename in pdf_files:
+        _process_file_gui(
+            pdf_path=os.path.join(manual_dir, filename),
+            driver=driver, wait=wait,
+            base_bd_dir=base_bd_dir,
+            normalize_fn=normalize_fn, match_name_fn=match_name_fn,
+            fila=fila, logger=logger, msg_queue=msg_queue,
+        )
+
+    return fila
+
+
+def _process_file_gui(pdf_path, driver, wait, base_bd_dir,
+                      normalize_fn, match_name_fn, fila, logger, msg_queue=None):
+    from selenium_navigation import searching_monitored
+
+    filename = os.path.basename(pdf_path)
+
+    def _log(text):
+        print(text)
+        if msg_queue:
+            msg_queue.put(("log", text))
+
+    _log(f"  Arquivo : {filename}")
+
+    if filename in fila["pendentes"]:
+        fila["pendentes"].remove(filename)
+    fila["processando"].append(filename)
+
+    try:
+        name = extract_name_from_filename(filename)
+        if not name:
+            raise ValueError("Nome não pôde ser extraído do arquivo.")
+
+        logger.info(f"Arquivo: {filename} | Nome: {name}")
+        _log(f"  Nome    : {name}")
+
+        cleaned_name = re.sub(r'[\\/*?:"<>|]', "", name)
+
+        folder = _find_folder(cleaned_name, base_bd_dir, normalize_fn, match_name_fn)
+        if not folder:
+            raise FileNotFoundError(f"Pasta de '{cleaned_name}' não encontrada no BD.")
+
+        logger.info(f"Pasta encontrada: {folder}")
+        _log(f"  Pasta   : {folder}")
+
+        dest = _safe_move(pdf_path, folder)
+        final_name = os.path.basename(dest)
+        logger.info(f"Movido: {dest}")
+        _log(f"  Movido  : {dest}")
+
+        logger.info(f"Enviando para Chronos: {final_name}")
+        ok = chronos_with_retry(
+            driver, wait, cleaned_name, final_name, dest, logger,
+            msg_queue=msg_queue,
+        )
+
+        if ok:
+            logger.info(f"Concluído: {filename}")
+            fila["processando"].remove(filename)
+            fila["concluidos"].append(filename)
+        else:
+            raise RuntimeError("Chronos falhou após todas as tentativas.")
+
+    except Exception as e:
+        logger.error(f"Erro em '{filename}': {e}")
+        _log(f"  ERRO    : {e}")
+        if filename in fila["processando"]:
+            fila["processando"].remove(filename)
+        fila["erros"].append(filename)
+        try:
+            driver.get("https://se.synergye.com.br/index.php?r=pessoa")
+        except Exception:
+            pass
+
+
+def chronos_with_retry(driver, wait, cleaned_name, final_name,
+                       destination_path, logger, msg_queue=None):
+    from selenium.common.exceptions import (
+        TimeoutException, ElementClickInterceptedException, WebDriverException)
+    from selenium_navigation import searching_monitored
+
+    excecoes_retentaveis = (TimeoutException, ElementClickInterceptedException, WebDriverException)
+
+    def _log(text):
+        print(text)
+        if msg_queue:
+            msg_queue.put(("log", text))
+
+    for tentativa in range(1, _MAX_TENTATIVAS + 1):
+        try:
+            logger.debug(f"Chronos tentativa {tentativa}/{_MAX_TENTATIVAS}: {final_name}")
+            searching_monitored(driver, wait, cleaned_name, final_name,
+                                destination_path, msg_queue=msg_queue)
+            logger.info(f"Chronos OK: {final_name}")
+            return True
+
+        except excecoes_retentaveis as e:
+            logger.warning(f"Chronos falha temporária (tentativa {tentativa}): {e}")
+            if tentativa < _MAX_TENTATIVAS:
+                _log(f"  ↻  Tentativa {tentativa} falhou, aguardando {_ESPERA_RETRY}s...")
+                time.sleep(_ESPERA_RETRY)
+                try:
+                    driver.get("https://se.synergye.com.br/index.php?r=pessoa")
+                    time.sleep(2)
+                except Exception:
+                    pass
+            else:
+                logger.error(f"Chronos esgotado: {final_name} | {e}")
+                _log(f"  ✗  Chronos falhou após {_MAX_TENTATIVAS} tentativas.")
+                return False
+
+        except Exception as e:
+            logger.error(f"Chronos erro inesperado: {e}")
+            return False
+
+    return False
